@@ -700,6 +700,18 @@ void multiplication() {
     int term1 = randInt(MULTMIN, MULTMAX);
     int term2 = randInt(MULTMIN, MULTMAX);
 
+    if (term1 == 10) {
+
+        term1 = 9;
+
+    }
+
+    if (term2 == 10) {
+
+        term2 = 9;
+
+    }
+
     snprintf(problem, sizeof(problem), "%i * %i", term1, term2);
 
     snprintf(answer, sizeof(answer), "%d", term1 * term2);
@@ -710,6 +722,18 @@ void division() {
 
     int term1 = randInt(MULTMIN, MULTMAX);
     int term2 = randInt(MULTMIN, MULTMAX);
+
+    if (term1 == 10) {
+
+        term1 = 9;
+
+    }
+
+    if (term2 == 10) {
+
+        term2 = 9;
+
+    }
 
     snprintf(problem, sizeof(problem), "%i / %i", term1 * term2, term1);
 
