@@ -919,7 +919,7 @@ BB12_1:
 	pop	iy
 	ld	hl, _inputMap
 	ld	(ix - 12), hl
-	jp	nz, BB12_32
+	jp	nz, BB12_34
 BB12_2:
 	lea	hl, iy
 	ld	bc, 36
@@ -1014,7 +1014,7 @@ BB12_9:
 	sbc	hl, bc
 	jr	nz, BB12_12
 	or	a, a
-	jp	nz, BB12_33
+	jp	nz, BB12_35
 BB12_12:
 	bit	0, c
 	jr	nz, BB12_14
@@ -1061,6 +1061,53 @@ BB12_19:
 	pop	hl
 	pop	hl
 	pop	hl
+	scf
+	sbc	hl, hl
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, 4
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, 10
+	push	hl
+	call	_gfx_FillCircle
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	bc, (_differenceTime)
+	ld	a, (_differenceTime+3)
+	ld	e, a
+	ld	hl, (_pulseDuration)
+	ld	a, (_pulseDuration+3)
+	ld	d, a
+	ld	a, e
+	ld	e, d
+	call	__fsub
+	ld	e, a
+	ld	iy, (_difference)
+	ld	a, (_difference+3)
+	push	bc
+	pop	hl
+	lea	bc, iy
+	call	__fcmp
+	jp	p, BB12_21
+	ld	hl, -32
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, 4
+	push	hl
+	ld	hl, 30
+	push	hl
+	ld	hl, 10
+	push	hl
+	call	_gfx_FillCircle
+	pop	hl
+	pop	hl
+	pop	hl
+BB12_21:
 	call	_clock
 	ld	bc, (_start)
 	ld	a, (_start+3)
@@ -1086,20 +1133,20 @@ BB12_19:
 	ld	e, 58
 	call	__fcmp
 	ld	e, 1
-	jp	p, BB12_21
+	jp	p, BB12_23
 	ld	e, 0
-BB12_21:
-	bit	0, e
-	ld	hl, 0
-	jr	nz, BB12_23
-	push	bc
-	pop	hl
 BB12_23:
 	bit	0, e
-	ld	e, 0
+	ld	hl, 0
 	jr	nz, BB12_25
-	ld	e, a
+	push	bc
+	pop	hl
 BB12_25:
+	bit	0, e
+	ld	e, 0
+	jr	nz, BB12_27
+	ld	e, a
+BB12_27:
 	push	de
 	push	hl
 	ld	hl, (ix - 15)
@@ -1149,7 +1196,7 @@ BB12_25:
 	ld	bc, 2097152
 	ld	a, 65
 	call	__fcmp
-	jp	p, BB12_27
+	jp	p, BB12_29
 	ld	hl, 6
 	push	hl
 	push	hl
@@ -1180,22 +1227,22 @@ BB12_25:
 	ld	hl, (_difference)
 	ld	a, (_difference+3)
 	ld	e, a
-BB12_27:
+BB12_29:
 	ld	bc, 2097152
 	ld	a, 65
 	call	__fcmp
 	ld	a, 1
-	jp	m, BB12_29
+	jp	m, BB12_31
 	ld	a, 0
-BB12_29:
+BB12_31:
 	ld	hl, (_digitShift)
 	ld	de, 6
 	add	hl, de
 	bit	0, a
-	jr	nz, BB12_31
+	jr	nz, BB12_33
 	push	de
 	pop	hl
-BB12_31:
+BB12_33:
 	push	de
 	push	hl
 	ld	hl, _timerDisp
@@ -1211,15 +1258,15 @@ BB12_31:
 	ld	e, h
 	call	__fcmp
 	jp	m, BB12_1
-	jr	BB12_34
-BB12_32:
+	jr	BB12_36
+BB12_34:
 	push	de
 	call	_forceQuit
 	pop	hl
-BB12_33:
+BB12_35:
 	ld	hl, 1
 	ld	(_inputLock+54), hl
-BB12_34:
+BB12_36:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -3241,7 +3288,7 @@ BB34_13:
 	ld	de, 12
 	or	a, a
 	sbc	hl, de
-	jp	nz, BB34_46
+	jp	nz, BB34_47
 	ld	a, (_var)
 	ld	l, a
 	push	hl
@@ -3399,22 +3446,21 @@ BB34_31:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB34_34
+	jr	nz, BB34_35
 	ld	iy, (_scoreBonus)
 	add	iy, de
 	lea	hl, iy
-	push	de
-	pop	bc
-	ld	de, 99
+	ld	de, 98
 	or	a, a
 	sbc	hl, de
-	push	bc
-	pop	de
 	call	pe, __setflag
-	jp	p, BB34_34
-	inc	iy
-	jr	BB34_37
+	jp	m, BB34_34
+	ld	iy, 98
 BB34_34:
+	inc	iy
+	ld	(_score), iy
+	jr	BB34_39
+BB34_35:
 	ld	bc, (_difference)
 	ld	a, (_difference+3)
 	push	de
@@ -3431,9 +3477,11 @@ BB34_34:
 	call	__fcmp
 	jp	p, BB34_38
 	dec	iy
-BB34_37:
 	ld	(_score), iy
 BB34_38:
+	ld	(_differenceTime), bc
+	ld	(_differenceTime+3), a
+BB34_39:
 	or	a, a
 	sbc	hl, hl
 	ld	(_scoreBonus), hl
@@ -3453,12 +3501,12 @@ BB34_38:
 	or	a, a
 	sbc	hl, bc
 	call	pe, __setflag
-	jp	p, BB34_43
+	jp	p, BB34_44
 	ex	de, hl
 	ld	de, 1
 	or	a, a
 	sbc	hl, de
-	jr	nz, BB34_43
+	jr	nz, BB34_44
 	ld	hl, 1
 	ld	(_newHighScore), hl
 	ld	hl, (_appvar)
@@ -3487,13 +3535,13 @@ BB34_38:
 	ld	de, 12
 	or	a, a
 	sbc	hl, de
-	jp	nz, BB34_48
+	jp	nz, BB34_49
 	ld	a, (_var)
 	ld	l, a
 	push	hl
 	call	_ti_Close
 	pop	hl
-BB34_43:
+BB34_44:
 	scf
 	sbc	hl, hl
 	push	hl
@@ -3545,34 +3593,34 @@ BB34_43:
 	pop	hl
 	xor	a, a
 	ld	(_var), a
-BB34_44:
+BB34_45:
 	call	_os_GetCSC
 	or	a, a
-	jr	z, BB34_44
+	jr	z, BB34_45
 	call	_gfx_End
 	or	a, a
 	sbc	hl, hl
 	jp	BB34_24
-BB34_46:
+BB34_47:
 	call	_gfx_End
 	ld	hl, _.str.41
 	push	hl
 	call	_os_PutStrFull
 	pop	hl
-BB34_47:
+BB34_48:
 	call	_os_GetCSC
 	or	a, a
-	jr	z, BB34_47
+	jr	z, BB34_48
 	jp	BB34_23
-BB34_48:
+BB34_49:
 	ld	hl, _.str.43
 	push	hl
 	call	_os_PutStrFull
 	pop	hl
-BB34_49:
+BB34_50:
 	call	_os_GetCSC
 	or	a, a
-	jr	z, BB34_49
+	jr	z, BB34_50
 	jp	BB34_23
 	section	.text,"ax",@progbits
 
@@ -3714,6 +3762,16 @@ _highScoreDisp:
 	public	_highScore
 _highScore:
 	rb	3
+
+	section	.data,"aw",@progbits
+	public	_differenceTime
+_differenceTime:
+	dd	0x4479f99a
+
+	section	.data,"aw",@progbits
+	public	_pulseDuration
+_pulseDuration:
+	dd	0x3dcccccd
 
 	section	.rodata,"a",@progbits
 	private	_.str.1
@@ -4013,13 +4071,13 @@ _inputLock:
 	rb	57
 
 	section	.bss,"aw",@nobits
-	public	_start
-_start:
+	public	_difference
+_difference:
 	rb	4
 
 	section	.bss,"aw",@nobits
-	public	_difference
-_difference:
+	public	_start
+_start:
 	rb	4
 
 	section	.bss,"aw",@nobits
@@ -4203,6 +4261,7 @@ _timerDisp:
 	extern	_exit
 	extern	__iand
 	extern	_gfx_FillRectangle
+	extern	_gfx_FillCircle
 	extern	_os_GetCSC
 	extern	__fsub
 	extern	__frameset

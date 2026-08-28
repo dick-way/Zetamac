@@ -16,6 +16,8 @@
 #define PTYPEMEM 11
 #define FACTORSMAX 16
 
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
 /*  arithmetic operation type          */
 
 const char ADD = '+';
@@ -71,6 +73,9 @@ char* highScoreDisp = "High Score: XX";
 int highScore = 0;
 
 int appvarData[PTYPEMEM + 1];
+
+float differenceTime = 999.9;
+float pulseDuration = 0.1;
 
 const char* ptypeName[] = {"Addition", "Subtraction", "Multiplication", "Division", "Factorials", "Addition - Fraction", "Subtraction - Fraction", "Exponentiation", "Exponentiation - Inverse", "Perfect Squares", "Perfect Square Roots"};
 
@@ -445,6 +450,17 @@ void textEntry() {
         gfx_SetTextFGColor(0x00);
         gfx_SetTextBGColor(0xFF);
         gfx_PrintStringXY(guess, (GFX_LCD_WIDTH / 2) - (30), 120);
+
+    /*  Incorrect indicator  */
+        gfx_SetColor(0xFF);
+        gfx_FillCircle(10, 30, 4);
+
+        if (differenceTime - pulseDuration < difference) {
+        
+            gfx_SetColor(0xE0);
+            gfx_FillCircle(10, 30, 4);
+        
+        }
 
         clock_t now = clock();
         float elapsed = (float)(now - start) / CLOCKS_PER_SEC;
@@ -1139,13 +1155,19 @@ int main(void) {
 
         textEntry();
 
-        if (strcmp(guess, answer) == 0 && score + scoreBonus + 1 < 100) {
+        if (strcmp(guess, answer) == 0) {
 
-            score += scoreBonus + 1;
+            score = min(99, score + scoreBonus + 1);
 
-        } else if (score > 0 && difference > 0) {
+        } else {
 
-            score--;
+            if (score > 0 && difference > 0){
+            
+                score--;
+            
+            }
+
+            differenceTime = difference;
 
         }
 
