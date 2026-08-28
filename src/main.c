@@ -367,7 +367,7 @@ void redrawScreen() {
 
     gfx_SetTextFGColor(0x00);
     gfx_SetTextBGColor(0xFF);
-    gfx_PrintStringXY("V 1.04", 6, GFX_LCD_HEIGHT - 14);
+    gfx_PrintStringXY("V 1.05", 6, GFX_LCD_HEIGHT - 14);
 
 }
 

@@ -2,6 +2,6 @@
 
 Arithmetic speed drill testing `addition, subtraction, multiplication, division, exponentiation, factorials` and more.
 
-V 1.04 Zetamac
+V 1.05 Zetamac
 
 ![screenshot0](https://www.cemetech.net/media/archives/screenshots/2025/11/screenshot_GXRWVMp_OsLgiNO.png)
