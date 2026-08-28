@@ -74,9 +74,6 @@ int highScore = 0;
 
 int appvarData[PTYPEMEM + 1];
 
-float differenceTime = 999.9;
-float pulseDuration = 0.1;
-
 const char* ptypeName[] = {"Addition", "Subtraction", "Multiplication", "Division", "Factorials", "Addition - Fraction", "Subtraction - Fraction", "Exponentiation", "Exponentiation - Inverse", "Perfect Squares", "Perfect Square Roots"};
 
 const char* character[12] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "/", "-"};
@@ -134,6 +131,24 @@ char problemDispOperation[2];
 int problemDispSquare = 0;
 
 int problemTerm[2];
+
+void drawTick(int x0, int y0, int x1, int y1, int thickness) {
+
+    float dx = x1 - x0;
+    float dy = y1 - y0;
+    float len = sqrtf(dx * dx + dy * dy);
+    float ox = -dy / len * thickness / 2.0f;
+    float oy =  dx / len * thickness / 2.0f;
+
+    int p1x = x0 + (int)ox, p1y = y0 + (int)oy;
+    int p2x = x1 + (int)ox, p2y = y1 + (int)oy;
+    int p3x = x1 - (int)ox, p3y = y1 - (int)oy;
+    int p4x = x0 - (int)ox, p4y = y0 - (int)oy;
+
+    gfx_FillTriangle(p1x, p1y, p2x, p2y, p3x, p3y);
+    gfx_FillTriangle(p1x, p1y, p3x, p3y, p4x, p4y);
+
+}
 
 int randIntWeighted(int min, int max, const double weight[]) {
 
@@ -450,17 +465,6 @@ void textEntry() {
         gfx_SetTextFGColor(0x00);
         gfx_SetTextBGColor(0xFF);
         gfx_PrintStringXY(guess, (GFX_LCD_WIDTH / 2) - (30), 120);
-
-    /*  Incorrect indicator  */
-        gfx_SetColor(0xFF);
-        gfx_FillCircle(10, 30, 4);
-
-        if (differenceTime - pulseDuration < difference) {
-        
-            gfx_SetColor(0xE0);
-            gfx_FillCircle(10, 30, 4);
-        
-        }
 
         clock_t now = clock();
         float elapsed = (float)(now - start) / CLOCKS_PER_SEC;
@@ -1159,6 +1163,10 @@ int main(void) {
 
             score = min(99, score + scoreBonus + 1);
 
+            gfx_SetColor(0xFF);
+            drawTick(6, 26, 14, 34, 3);
+            drawTick(14, 26, 6, 34, 3);
+
         } else {
 
             if (score > 0 && difference > 0){
@@ -1167,7 +1175,9 @@ int main(void) {
             
             }
 
-            differenceTime = difference;
+            gfx_SetColor(0xE0);
+            drawTick(6, 26, 14, 34, 3);
+            drawTick(14, 26, 6, 34, 3);
 
         }
 
