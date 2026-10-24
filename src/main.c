@@ -11,7 +11,7 @@
 #include <math.h>
 #include <time.h>
 
-#include <debug.h>
+// #include <debug.h>
 
 #define PTYPEMEM 11
 #define FACTORSMAX 16
@@ -26,12 +26,12 @@ const char SUB = '-';
 /*  addition/subtraction               */
 
 const int ADDMIN = 20;
-const int ADDMAX = 100;
+const int ADDMAX = 500;
 
 /*  multiplication/division            */
 
-const int MULTMIN = 2;
-const int MULTMAX = 14;
+const int MULTMIN = 3;
+const int MULTMAX = 16;
 
 /*  factorial                          */
 
@@ -60,7 +60,7 @@ const int EXPMAX[8] = {8, 4, 4, 4, 3, 3, 3, 3};
 
 /*  perfect squares/root               */
 
-const int SQUAREMIN = 15;
+const int SQUAREMIN = 13;
 const int SQUAREMAX = 32;
 
 int ptypeProblems[PTYPEMEM];
@@ -160,7 +160,7 @@ int randIntWeighted(int min, int max, const double weight[]) {
     
         cumulative += weight[i];
 
-        if(r <= cumulative) {
+        if (r <= cumulative) {
 
             return min + i;
 
@@ -281,7 +281,7 @@ static void printTime(float elapsed) {
     gfx_SetTextFGColor(0xFF);
     gfx_SetTextBGColor(header);
 
-    if(difference < 10.00) {
+    if (difference < 10.00) {
 
         gfx_PrintStringXY("0", 6, 6);
         
@@ -313,7 +313,7 @@ void redrawScreen() {
 
         for (int i = 0; i < 4; i++) {
 
-            if(strlen(problemDispTerm[i]) == 2) {
+            if (strlen(problemDispTerm[i]) == 2) {
 
                 shift[i] = 3;
 
@@ -326,11 +326,11 @@ void redrawScreen() {
 
         gfx_PrintStringXY(problemDispTerm[0], (GFX_LCD_WIDTH / 2) - 20 - shift[0], (problemTerm[0] == 1) ? 80 : 74);
 
-        if(problemTerm[0] != 1) {  gfx_PrintStringXY(problemDispTerm[1], (GFX_LCD_WIDTH / 2) - 20 - shift[1], 86);  }
+        if (problemTerm[0] != 1) {  gfx_PrintStringXY(problemDispTerm[1], (GFX_LCD_WIDTH / 2) - 20 - shift[1], 86);  }
 
         gfx_PrintStringXY(problemDispTerm[2], (GFX_LCD_WIDTH / 2) + 10 - shift[2], (problemTerm[1] == 1) ? 80 : 74);
         
-        if(problemTerm[1] != 1) {  gfx_PrintStringXY(problemDispTerm[3], (GFX_LCD_WIDTH / 2) + 10 - shift[3], 86);  }
+        if (problemTerm[1] != 1) {  gfx_PrintStringXY(problemDispTerm[3], (GFX_LCD_WIDTH / 2) + 10 - shift[3], 86);  }
 
     } else if (problemDispType == 2) {
 
@@ -382,7 +382,7 @@ void redrawScreen() {
 
     gfx_SetTextFGColor(0x00);
     gfx_SetTextBGColor(0xFF);
-    gfx_PrintStringXY("V 1.05", 6, GFX_LCD_HEIGHT - 14);
+    gfx_PrintStringXY("V 1.06", 6, GFX_LCD_HEIGHT - 14);
 
 }
 
@@ -499,7 +499,7 @@ int ptypeRemoveItem(int index) {
 
 void configSelection(int color, int selection) {
 
-    if(ptypeSelection < PTYPEMEM) {
+    if (ptypeSelection < PTYPEMEM) {
 
         int x0 = (GFX_LCD_WIDTH / 2) - (gfx_GetStringWidth(ptypeName[selection]) / 2);
         int y0 = (selection * 12);
@@ -512,7 +512,7 @@ void configSelection(int color, int selection) {
 
     }
 
-    if(ptypeSelection == PTYPEMEM) {
+    if (ptypeSelection == PTYPEMEM) {
 
         gfx_SetColor(0x00);
         gfx_Rectangle((GFX_LCD_WIDTH / 2) - 32, 176, 64, 16);
@@ -573,7 +573,7 @@ void configMenu() {
 
             inputLock[18] = 1;
 
-            if(ptypeSelection < PTYPEMEM) {
+            if (ptypeSelection < PTYPEMEM) {
 
                 ptypeState[ptypeSelection] = (ptypeState[ptypeSelection] == 1) ? 0 : 1;
 
@@ -722,13 +722,37 @@ void multiplication() {
 
     if (term1 == 10) {
 
-        term1 = 9;
+        term1 = 9 + (2 * randInt(0, 1));
 
     }
 
     if (term2 == 10) {
 
-        term2 = 9;
+        term2 = 9 + (2 * randInt(0, 1));
+
+    }
+
+    if (term1 == term2) {
+
+        if (term1 > (MULTMAX - MULTMIN) / 2) {
+
+            term2--;
+
+        } else {
+
+            term2++;
+
+        }
+
+    }
+
+    if (term1 == 11 && term2 < 11) {
+
+        term2 = randInt(12, MULTMAX);
+
+    } else if (term2 == 11 && term1 < 11) {
+
+        term1 = randInt(12, MULTMAX);
 
     }
 
@@ -821,7 +845,7 @@ void arithmeticFraction(const char operation) {
 
     int gcdivisor = gcd(abs(numerator), denominator);
 
-    if(gcdivisor > 1) {
+    if (gcdivisor > 1) {
 
         scoreBonus++;
 
@@ -960,7 +984,7 @@ void generateProblem() {
 
     }
 
-    dbg_printf("%s\n", answer);
+//  dbg_printf("%s\n", answer);
 
 }
 

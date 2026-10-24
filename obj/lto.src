@@ -2194,13 +2194,13 @@ _arithmetic:
 	ld	hl, -9
 	call	__frameset
 	call	_random
-	ld	bc, 81
+	ld	bc, 481
 	call	__iremu
 	ld	de, 20
 	add	hl, de
 	ld	(ix - 3), hl
 	call	_random
-	ld	bc, 81
+	ld	bc, 481
 	call	__iremu
 	ld	(ix - 6), hl
 	push	hl
@@ -2262,41 +2262,109 @@ _multiplication:
 	ld	hl, -6
 	call	__frameset
 	call	_random
-	ld	bc, 13
+	ld	bc, 14
 	call	__iremu
-	ld	de, 2
+	ld	de, 3
+	add	hl, de
+	ld	(ix - 3), hl
+	call	_random
+	ld	iy, (ix - 3)
+	ld	bc, 14
+	call	__iremu
+	ld	de, 3
 	add	hl, de
 	ld	(ix - 6), hl
+	ld	de, 10
+	lea	hl, iy
+	or	a, a
+	sbc	hl, de
+	jr	nz, BB22_2
 	call	_random
-	ld	bc, 13
+	ld	c, 1
+	call	__ishl
+	ld	bc, 2
+	call	__iand
+	push	hl
+	pop	iy
+	ld	de, 9
+	add	iy, de
+	inc	de
+BB22_2:
+	ld	bc, (ix - 6)
+	push	bc
+	pop	hl
+	or	a, a
+	sbc	hl, de
+	jr	nz, BB22_4
+	ld	(ix - 3), iy
+	call	_random
+	ld	iy, (ix - 3)
+	ld	c, 1
+	call	__ishl
+	ld	bc, 2
+	call	__iand
+	ld	de, 9
+	add	hl, de
+	push	hl
+	pop	bc
+BB22_4:
+	lea	hl, iy
+	or	a, a
+	sbc	hl, bc
+	jr	nz, BB22_7
+	ld	de, 7
+	lea	hl, iy
+	lea	bc, iy
+	or	a, a
+	sbc	hl, de
+	jr	c, BB22_13
+	dec	bc
+BB22_7:
+	ld	de, 11
+	lea	hl, iy
+	or	a, a
+	sbc	hl, de
+	jr	nz, BB22_10
+	push	bc
+	pop	hl
+	or	a, a
+	sbc	hl, de
+	jr	nc, BB22_10
+	call	_random
+	ld	bc, 5
+	call	__iremu
+	ld	de, 12
+	add	hl, de
+	ld	iy, 11
+	push	hl
+	pop	bc
+	jr	BB22_14
+BB22_10:
+	push	bc
+	pop	hl
+	or	a, a
+	sbc	hl, de
+	jr	nz, BB22_14
+	lea	hl, iy
+	or	a, a
+	sbc	hl, de
+	jr	nc, BB22_14
+	call	_random
+	ld	bc, 5
 	call	__iremu
 	push	hl
 	pop	iy
-	ld	de, 2
+	ld	de, 12
 	add	iy, de
-	ld	de, 10
-	ld	hl, (ix - 6)
-	or	a, a
-	sbc	hl, de
-	ld	hl, 9
-	push	hl
-	pop	bc
-	ld	(ix - 3), hl
-	jr	z, BB22_2
-	ld	hl, (ix - 6)
-	ld	(ix - 3), hl
-BB22_2:
-	lea	hl, iy
-	ld	de, 10
-	or	a, a
-	sbc	hl, de
-	jr	z, BB22_4
-	lea	bc, iy
-BB22_4:
+	ld	bc, 11
+	jr	BB22_14
+BB22_13:
+	inc	bc
+BB22_14:
 	ld	(ix - 6), bc
+	ld	(ix - 3), iy
 	push	bc
-	ld	hl, (ix - 3)
-	push	hl
+	push	iy
 	ld	hl, _.str.31
 	push	hl
 	ld	hl, 17
@@ -2331,17 +2399,17 @@ _division:
 	ld	hl, -6
 	call	__frameset
 	call	_random
-	ld	bc, 13
+	ld	bc, 14
 	call	__iremu
-	ld	de, 2
+	ld	de, 3
 	add	hl, de
 	ld	(ix - 6), hl
 	call	_random
-	ld	bc, 13
+	ld	bc, 14
 	call	__iremu
 	push	hl
 	pop	iy
-	ld	de, 2
+	ld	de, 3
 	add	iy, de
 	ld	de, 10
 	ld	hl, (ix - 6)
@@ -2908,11 +2976,11 @@ _perfectSquare:
 	ld	hl, -3
 	call	__frameset
 	call	_random
-	ld	bc, 18
+	ld	bc, 20
 	call	__iremu
 	push	hl
 	pop	iy
-	ld	de, 15
+	ld	de, 13
 	add	iy, de
 	ld	(ix - 3), iy
 	xor	a, a
@@ -2972,11 +3040,11 @@ _perfectSquareInverse:
 	ld	hl, -3
 	call	__frameset
 	call	_random
-	ld	bc, 18
+	ld	bc, 20
 	call	__iremu
 	push	hl
 	pop	iy
-	ld	de, 15
+	ld	de, 13
 	add	iy, de
 	ld	(ix - 3), iy
 	xor	a, a
@@ -3820,17 +3888,17 @@ _ADDMIN:
 	section	.rodata,"a",@progbits
 	public	_ADDMAX
 _ADDMAX:
-	dl	100
+	dl	500
 
 	section	.rodata,"a",@progbits
 	public	_MULTMIN
 _MULTMIN:
-	dl	2
+	dl	3
 
 	section	.rodata,"a",@progbits
 	public	_MULTMAX
 _MULTMAX:
-	dl	14
+	dl	16
 
 	section	.rodata,"a",@progbits
 	public	_FACTMIN
@@ -3909,7 +3977,7 @@ _EXPMAX:
 	section	.rodata,"a",@progbits
 	public	_SQUAREMIN
 _SQUAREMIN:
-	dl	15
+	dl	13
 
 	section	.rodata,"a",@progbits
 	public	_SQUAREMAX
@@ -4221,7 +4289,7 @@ _.str.25:
 	section	.rodata,"a",@progbits
 	private	_.str.26
 _.str.26:
-	db	"V 1.05", 0
+	db	"V 1.06", 0
 
 	section	.bss,"aw",@nobits
 	public	_key1
@@ -4424,6 +4492,7 @@ _timerDisp:
 	extern	_ti_Close
 	extern	_snprintf
 	extern	__sand
+	extern	__ishl
 	extern	__ftol
 	extern	_strlen
 	extern	_ti_Read

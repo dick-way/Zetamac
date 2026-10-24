@@ -18,5 +18,4 @@ obj/src/main.c.bc: src/main.c \
   /Users/evan/ti-workspace/CEdev/include/fileioc.h \
   /Users/evan/ti-workspace/CEdev/include/ti/vars.h \
   /Users/evan/ti-workspace/CEdev/include/math.h \
-  /Users/evan/ti-workspace/CEdev/include/time.h \
-  /Users/evan/ti-workspace/CEdev/include/debug.h
+  /Users/evan/ti-workspace/CEdev/include/time.h
